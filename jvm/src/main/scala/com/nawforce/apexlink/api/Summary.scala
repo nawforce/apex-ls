@@ -116,7 +116,8 @@ case class FieldSummary(
   typeName: TypeName,
   readAccess: Modifier,
   writeAccess: Modifier,
-  dependents: Array[DependentSummary]
+  dependents: Array[DependentSummary],
+  apexDocLocation: Option[Location] = None
 ) {
   override def equals(that: Any): Boolean = {
     that match {
@@ -296,4 +297,5 @@ object FieldDependentSummary {
 object MethodDependentSummary {
   implicit val rw: RW[MethodDependentSummary] = macroRW
 }
+
 
