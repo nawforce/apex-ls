@@ -208,16 +208,21 @@ class ApexDocParser {
 
   /** Extract @param tags into a map */
   private def extractParams(tags: Map[String, String]): Map[String, String] = {
-    tags.collect {
+    val paramEntries = mutable.Map[String, String]()
+    
+    tags.foreach {
       case (key, value) if key == "param" =>
         // Parse "@param paramName description" format
         val parts = value.split("\\s+", 2)
         if (parts.length >= 2) {
-          parts(0) -> parts(1)
-        } else {
-          parts(0) -> ""
+          paramEntries(parts(0)) = parts(1)
+        } else if (parts.length == 1) {
+          paramEntries(parts(0)) = ""
         }
+      case _ => // Ignore non-param tags
     }
+    
+    paramEntries.toMap
   }
 
   /** Extract a specific tag value */
@@ -242,5 +247,6 @@ object ApexDocParser {
     None // TODO: Implement when needed by ApexDocProvider
   }
 }
+
 
 
