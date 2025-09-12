@@ -213,16 +213,30 @@ class ApexDocParser {
   private def extractParams(tags: Map[String, String]): Map[String, String] = {
     val paramEntries = mutable.Map[String, String]()
     
-    tags.foreach {
-      case (key, value) if key == "param" =>
-        // Parse "@param paramName description" format
-        val parts = value.split("\\s+", 2)
-        if (parts.length >= 2) {
-          paramEntries(parts(0)) = parts(1)
-        } else if (parts.length == 1) {
-          paramEntries(parts(0)) = ""
+    // Handle multiple @param tags by parsing the combined value
+    tags.get("param") match {
+      case Some(paramValue) =>
+        // Split by @param to handle multiple parameters in one value
+        val paramSections = paramValue.split("@param").filter(_.nonEmpty)
+        paramSections.foreach { section =>
+          val parts = section.trim.split("\\s+", 2)
+          if (parts.length >= 2) {
+            paramEntries(parts(0)) = parts(1)
+          } else if (parts.length == 1 && parts(0).nonEmpty) {
+            paramEntries(parts(0)) = ""
+          }
         }
-      case _ => // Ignore non-param tags
+        
+        // If no @param separators found, treat as single param
+        if (paramSections.isEmpty) {
+          val parts = paramValue.trim.split("\\s+", 2)
+          if (parts.length >= 2) {
+            paramEntries(parts(0)) = parts(1)
+          } else if (parts.length == 1 && parts(0).nonEmpty) {
+            paramEntries(parts(0)) = ""
+          }
+        }
+      case None => // No @param tags found
     }
     
     paramEntries.toMap
@@ -250,6 +264,7 @@ object ApexDocParser {
     None // TODO: Implement when needed by ApexDocProvider
   }
 }
+
 
 
 
