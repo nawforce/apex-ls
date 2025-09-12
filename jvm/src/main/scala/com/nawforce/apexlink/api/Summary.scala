@@ -48,7 +48,8 @@ case class TypeSummary(
   constructors: ArraySeq[ConstructorSummary],
   methods: ArraySeq[MethodSummary],
   nestedTypes: ArraySeq[TypeSummary],
-  dependents: Array[DependentSummary]
+  dependents: Array[DependentSummary],
+  apexDocLocation: Option[Location] = None
 ) {
 
   // For backwards compatibility in ApexFlow
@@ -295,3 +296,4 @@ object FieldDependentSummary {
 object MethodDependentSummary {
   implicit val rw: RW[MethodDependentSummary] = macroRW
 }
+
