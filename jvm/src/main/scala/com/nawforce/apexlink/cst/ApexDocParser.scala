@@ -37,43 +37,74 @@ case class ApexDocComment(
 /** Parser for ApexDoc comments that extracts location and content information */
 class ApexDocParser {
 
-  /** Parse ApexDoc comments from token stream at specified token index
+  /** Parse ApexDoc comments from a CodeParser and ANTLR context
+    * @param parser the CodeParser instance
+    * @param context the ANTLR parser rule context
+    * @return Option containing ApexDoc comment location if found
+    */
+  def parseApexDocLocation(parser: CodeParser, context: org.antlr.v4.runtime.ParserRuleContext): Option[Location] = {
+    try {
+      val tokenStream = new CommonTokenStream(new ApexLexer(parser.cis))
+      tokenStream.fill()
+
+      val startTokenIndex = context.getStart.getTokenIndex
+      
+      // Look for ApexDoc comments to the left of the declaration (most common case)
+      val tokensL = Option(tokenStream.getHiddenTokensToLeft(startTokenIndex))
+        .map(_.asScala)
+        .getOrElse(Seq.empty)
+      
+      // Look for ApexDoc comments to the right of the previous token
+      val tokensR = if (startTokenIndex > 0) {
+        Option(tokenStream.getHiddenTokensToRight(startTokenIndex - 1))
+          .map(_.asScala)
+          .getOrElse(Seq.empty)
+      } else Seq.empty
+
+      val allTokens = (tokensL ++ tokensR).toSeq
+      
+      // Find the closest ApexDoc comment
+      allTokens
+        .filter(isApexDocComment)
+        .sortBy(_.getTokenIndex)
+        .lastOption
+        .map(tokenToLocation)
+        
+    } catch {
+      case _: Exception => None // Ignore parsing errors
+    }
+  }
+
+  /** Parse full ApexDoc comment from token stream at specified token index
     * @param tokenStream the ANTLR token stream
     * @param tokenIndex the index of the token to search around
     * @return Option containing ApexDoc comment if found
     */
   def parseApexDocAt(tokenStream: CommonTokenStream, tokenIndex: Int): Option[ApexDocComment] = {
-    // Look for ApexDoc comments to the left of the token (preceding the declaration)
-    val tokensL = Option(tokenStream.getHiddenTokensToLeft(tokenIndex))
-      .map(_.asScala.toSeq)
-      .getOrElse(Seq.empty)
-    
-    // Look for ApexDoc comments to the right of the previous token
-    val tokensR = if (tokenIndex > 0) {
-      Option(tokenStream.getHiddenTokensToRight(tokenIndex - 1))
-        .map(_.asScala.toSeq)
+    try {
+      // Look for ApexDoc comments to the left of the token (preceding the declaration)
+      val tokensL = Option(tokenStream.getHiddenTokensToLeft(tokenIndex))
+        .map(_.asScala)
         .getOrElse(Seq.empty)
-    } else Seq.empty
+      
+      // Look for ApexDoc comments to the right of the previous token
+      val tokensR = if (tokenIndex > 0) {
+        Option(tokenStream.getHiddenTokensToRight(tokenIndex - 1))
+          .map(_.asScala)
+          .getOrElse(Seq.empty)
+      } else Seq.empty
 
-    val allTokens = tokensL ++ tokensR
-    
-    // Find the closest ApexDoc comment
-    allTokens
-      .filter(isApexDocComment)
-      .sortBy(_.getTokenIndex)
-      .lastOption
-      .flatMap(parseApexDocToken)
-  }
-
-  /** Parse ApexDoc comments from source code using a CodeParser
-    * @param parser the CodeParser instance
-    * @param tokenIndex the token index to search around
-    * @return Option containing ApexDoc comment if found
-    */
-  def parseApexDocFromParser(parser: CodeParser, tokenIndex: Int): Option[ApexDocComment] = {
-    parser.lastTokenStream match {
-      case Some(tokenStream) => parseApexDocAt(tokenStream, tokenIndex)
-      case None => None
+      val allTokens = (tokensL ++ tokensR).toSeq
+      
+      // Find the closest ApexDoc comment
+      allTokens
+        .filter(isApexDocComment)
+        .sortBy(_.getTokenIndex)
+        .lastOption
+        .flatMap(parseApexDocToken)
+        
+    } catch {
+      case _: Exception => None // Ignore parsing errors
     }
   }
 
@@ -193,3 +224,4 @@ object ApexDocParser {
     None // TODO: Implement when needed by ApexDocProvider
   }
 }
+
