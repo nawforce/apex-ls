@@ -176,7 +176,8 @@ case class MethodSummary(
   var typeName: TypeName,
   parameters: ArraySeq[ParameterSummary],
   hasBlock: Boolean,
-  dependents: Array[DependentSummary]
+  dependents: Array[DependentSummary],
+  apexDocLocation: Option[Location] = None
 ) {
 
   typeName = typeName.intern
@@ -298,6 +299,7 @@ object FieldDependentSummary {
 object MethodDependentSummary {
   implicit val rw: RW[MethodDependentSummary] = macroRW
 }
+
 
 
 
