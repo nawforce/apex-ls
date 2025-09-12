@@ -202,7 +202,8 @@ case class MethodSummary(
     this.typeName == other.typeName &&
     this.parameters == other.parameters &&
     this.hasBlock == other.hasBlock &&
-    this.dependents.sameElements(other.dependents)
+    this.dependents.sameElements(other.dependents) &&
+    this.apexDocLocation == other.apexDocLocation
   }
 }
 
@@ -302,6 +303,7 @@ object FieldDependentSummary {
 object MethodDependentSummary {
   implicit val rw: RW[MethodDependentSummary] = macroRW
 }
+
 
 
 
