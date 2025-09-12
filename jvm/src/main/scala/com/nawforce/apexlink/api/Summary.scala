@@ -165,7 +165,8 @@ case class ConstructorSummary(
     this.idLocation == other.idLocation &&
     this.modifiers == other.modifiers &&
     this.parameters == other.parameters &&
-    this.dependents.sameElements(other.dependents)
+    this.dependents.sameElements(other.dependents) &&
+    this.apexDocLocation == other.apexDocLocation
   }
 }
 
@@ -301,6 +302,7 @@ object FieldDependentSummary {
 object MethodDependentSummary {
   implicit val rw: RW[MethodDependentSummary] = macroRW
 }
+
 
 
 
