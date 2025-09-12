@@ -80,7 +80,8 @@ case class TypeSummary(
     this.constructors == other.constructors &&
     this.methods == other.methods &&
     this.nestedTypes == other.nestedTypes &&
-    this.dependents.sameElements(other.dependents)
+    this.dependents.sameElements(other.dependents) &&
+    this.apexDocLocation == other.apexDocLocation
   }
 }
 
@@ -299,6 +300,7 @@ object FieldDependentSummary {
 object MethodDependentSummary {
   implicit val rw: RW[MethodDependentSummary] = macroRW
 }
+
 
 
 
