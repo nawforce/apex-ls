@@ -108,9 +108,27 @@ class ApexDocParser {
     }
   }
 
+  /** Convert a token to a Location */
+  private def tokenToLocation(token: Token): Location = {
+    val text = token.getText
+    val endLine = token.getLine + text.count(_ == '\n')
+    val endColumn = if (text.contains('\n')) {
+      text.split('\n').last.length
+    } else {
+      token.getCharPositionInLine + text.length
+    }
+    
+    Location(
+      token.getLine,
+      token.getCharPositionInLine,
+      endLine,
+      endColumn
+    )
+  }
+
   /** Check if a token represents an ApexDoc comment */
   private def isApexDocComment(token: Token): Boolean = {
-    val text = token.getText
+    val text = token.getText.trim
     // Support both legacy /** */ format and new ApexDoc format
     text.startsWith("/**") || isNewApexDocFormat(text)
   }
@@ -224,4 +242,5 @@ object ApexDocParser {
     None // TODO: Implement when needed by ApexDocProvider
   }
 }
+
 
