@@ -144,12 +144,7 @@ class ApexDocParser {
   /** Parse an ApexDoc comment token into structured information */
   private def parseApexDocToken(token: Token): Option[ApexDocComment] = {
     val text = token.getText
-    val location = Location(
-      token.getLine,
-      token.getCharPositionInLine,
-      token.getLine + text.count(_ == '\n'),
-      token.getCharPositionInLine + text.length
-    )
+    val location = tokenToLocation(token)
 
     try {
       val cleanedText = cleanApexDocText(text)
@@ -247,6 +242,7 @@ object ApexDocParser {
     None // TODO: Implement when needed by ApexDocProvider
   }
 }
+
 
 
 
