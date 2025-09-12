@@ -183,22 +183,30 @@ class ApexDocParser {
     val tagPattern: Regex = """@(\w+)\s+(.*)""".r
     val lines = text.split('\n')
     val descriptionLines = mutable.ArrayBuffer[String]()
-    val tags = mutable.Map[String, String]()
+    val tags = mutable.Map[String, mutable.ArrayBuffer[String]]()
     
     var inDescription = true
+    var currentTag: Option[String] = None
     
     for (line <- lines) {
       line.trim match {
         case tagPattern(tagName, tagValue) =>
           inDescription = false
-          tags(tagName) = tagValue.trim
+          currentTag = Some(tagName)
+          tags.getOrElseUpdate(tagName, mutable.ArrayBuffer[String]()) += tagValue.trim
+        case other if !inDescription && currentTag.isDefined && other.nonEmpty =>
+          // Continue previous tag on next line
+          tags(currentTag.get).last += " " + other
         case other if inDescription && other.nonEmpty =>
           descriptionLines += other
-        case _ => // Skip empty lines or continue with current mode
+        case _ => // Skip empty lines or reset current tag
+          currentTag = None
       }
     }
     
-    (descriptionLines.mkString(" ").trim, tags.toMap)
+    // Convert to simple map, joining multiple values for same tag
+    val simpleTags = tags.map { case (key, values) => key -> values.mkString(" ") }.toMap
+    (descriptionLines.mkString(" ").trim, simpleTags)
   }
 
   /** Extract @param tags into a map */
@@ -242,6 +250,7 @@ object ApexDocParser {
     None // TODO: Implement when needed by ApexDocProvider
   }
 }
+
 
 
 
