@@ -2,6 +2,9 @@
 
 The Apex Language Server library provides a collection of tools to aid development of Salesforce Apex projects. Check for errors, find types, suggest code completions and more.
 
+[!TIP]
+> Welcome to Open SWE!
+
 ## Getting Started
 
 ### Installation
@@ -160,3 +163,4 @@ See [doc page](doc/API_Updates.md).
 The source code forked from [apex-link](https://github.com/nawforce/apex-link) & [pkgforce](https://github.com/nawforce/pkgforce) uses a 3-clause BSD licence. Additional contributions:
 
 * The antlr4c3 CodeCompletionCore.java has been embedded under a MIT licence.
+
