@@ -137,7 +137,8 @@ case class FieldSummary(
     this.typeName == other.typeName &&
     this.readAccess == other.readAccess &&
     this.writeAccess == other.writeAccess &&
-    this.dependents.sameElements(other.dependents)
+    this.dependents.sameElements(other.dependents) &&
+    this.apexDocLocation == other.apexDocLocation
   }
 }
 
@@ -300,6 +301,7 @@ object FieldDependentSummary {
 object MethodDependentSummary {
   implicit val rw: RW[MethodDependentSummary] = macroRW
 }
+
 
 
 
