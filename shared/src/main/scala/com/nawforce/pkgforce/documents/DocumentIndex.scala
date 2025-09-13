@@ -170,11 +170,7 @@ object DocumentIndex {
     path: PathLike,
     forceIgnoreVersion: ForceIgnoreVersion = ForceIgnoreVersion.default
   ): DocumentIndex = {
-    val ignore = forceIgnoreVersion match {
-      case ForceIgnoreVersion.V1 => logger.logAndGet(ForceIgnore(projectPath.join(".forceignore")))
-      case ForceIgnoreVersion.V2 =>
-        logger.logAndGet(ForceIgnoreV2(projectPath.join(".forceignore")))
-    }
+    val ignore = logger.logAndGet(ForceIgnoreV2(projectPath.join(".forceignore")))
     new DocumentIndex(path, logger, namespace, isGulped, ignore)
   }
 
@@ -221,4 +217,5 @@ object DocumentIndex {
   }
 
 }
+
 
