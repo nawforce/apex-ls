@@ -18,9 +18,6 @@ sealed abstract class ForceIgnoreVersion(val value: String)
 
 object ForceIgnoreVersion {
 
-  /** Legacy ForceIgnore implementation */
-  case object V1 extends ForceIgnoreVersion("v1")
-
   /** ForceIgnoreV2 with exact node-ignore 5.3.2 compatibility */
   case object V2 extends ForceIgnoreVersion("v2")
 
@@ -40,3 +37,4 @@ object ForceIgnoreVersion {
   /** All valid string values */
   val validValues: Seq[String] = all.map(_.value)
 }
+
