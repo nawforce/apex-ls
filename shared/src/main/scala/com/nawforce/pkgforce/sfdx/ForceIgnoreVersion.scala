@@ -31,10 +31,11 @@ object ForceIgnoreVersion {
   val default: ForceIgnoreVersion = V2
 
   /** All valid versions */
-  val all: Seq[ForceIgnoreVersion] = Seq(V1, V2)
+  val all: Seq[ForceIgnoreVersion] = Seq(V2)
 
   /** All valid string values */
   val validValues: Seq[String] = all.map(_.value)
 }
+
 
 
