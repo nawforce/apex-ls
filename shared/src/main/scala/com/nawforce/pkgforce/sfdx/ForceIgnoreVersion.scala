@@ -23,7 +23,6 @@ object ForceIgnoreVersion {
 
   /** Parse string value to enum */
   def fromString(value: String): Option[ForceIgnoreVersion] = value match {
-    case "v1" => Some(V1)
     case "v2" => Some(V2)
     case _    => None
   }
@@ -37,4 +36,5 @@ object ForceIgnoreVersion {
   /** All valid string values */
   val validValues: Seq[String] = all.map(_.value)
 }
+
 
