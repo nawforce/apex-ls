@@ -17,7 +17,6 @@ import com.nawforce.pkgforce.diagnostics._
 import com.nawforce.pkgforce.names.{Name, TypeName}
 import com.nawforce.pkgforce.path.PathLike
 import com.nawforce.pkgforce.sfdx.{
-  ForceIgnore,
   ForceIgnoreInterface,
   ForceIgnoreV2,
   ForceIgnoreVersion
@@ -222,3 +221,4 @@ object DocumentIndex {
   }
 
 }
+
