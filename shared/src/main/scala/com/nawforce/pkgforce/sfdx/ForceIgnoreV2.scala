@@ -20,6 +20,12 @@ import com.nawforce.runtime.platform.{Environment, Path}
 import scala.collection.compat.immutable.ArraySeq
 import scala.util.matching.Regex
 
+/** Common interface for ForceIgnore implementations */
+trait ForceIgnoreInterface {
+  def includeDirectory(path: PathLike): Boolean
+  def includeFile(path: PathLike): Boolean
+}
+
 /** ForceIgnoreV2 - node-ignore compatible implementation */
 class ForceIgnoreV2(rootPath: PathLike, rules: Seq[IgnoreRuleV2]) extends ForceIgnoreInterface {
 
@@ -188,3 +194,4 @@ object IgnoreRuleV2 {
       .toIndexedSeq
   }
 }
+
