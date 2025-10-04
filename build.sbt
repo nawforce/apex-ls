@@ -74,6 +74,9 @@ lazy val apexls = crossProject(JSPlatform, JVMPlatform)
     build                    := buildJs(Compile / fullLinkJS).value,
     Dev / build              := buildJs(Compile / fastLinkJS).value,
     Test / parallelExecution := false,
+    // Ensure npm workspace is prepared before running Scala.js tests so that
+    // `sbt test` works without requiring a prior `sbt build` invocation.
+    Test / executeTests      := (Test / executeTests).dependsOn(Compile / build).value,
     libraryDependencies ++= Seq("net.exoego" %%% "scala-js-nodejs-v14" % "0.12.0"),
     scalaJSUseMainModuleInitializer := false,
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
